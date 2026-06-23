@@ -1,0 +1,256 @@
+/* النمط الإبداعي الحر - The Fluid Canvas */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* إخفاء المؤشر الافتراضي لتفعيل السحر النحاسي */
+    cursor: none !important;
+}
+
+body {
+    background-color: #000000;
+    color: #EAE6DF;
+    font-family: 'Tajawal', sans-serif;
+    overflow-x: hidden;
+}
+
+h1, h2, h3 {
+    font-family: 'Cairo', sans-serif;
+}
+
+/* الضباب والضجيج السينمائي */
+.noise-bg {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* مؤشر الماوس المخصص */
+.cursor-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #C49A45;
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+}
+
+.cursor-glow {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(196, 154, 69, 0.4);
+    box-shadow: 0 0 20px rgba(196, 154, 69, 0.2);
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background-color 0.3s;
+}
+
+/* توسع المؤشر عند التمرير على العناصر التفاعلية */
+body.hovering .cursor-glow {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(196, 154, 69, 0.1);
+}
+
+.navbar {
+    position: fixed;
+    top: 0; right: 0;
+    padding: 30px 50px;
+    z-index: 100;
+}
+.eagle-logo {
+    width: 50px;
+    filter: drop-shadow(0px 0px 10px rgba(196, 154, 69, 0.5));
+}
+
+/* الهيكلة الانسيابية */
+.fluid-canvas {
+    position: relative;
+    width: 100%;
+}
+
+.fluid-section {
+    position: relative;
+    width: 100%;
+    height: 120vh; /* أطول من الشاشة لإعطاء مساحة للغوص */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bg-parallax {
+    position: absolute;
+    top: -10%; left: -10%;
+    width: 120%; height: 120%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    filter: brightness(0.4) contrast(1.1);
+}
+
+.fluid-section::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, #000000 0%, transparent 20%, transparent 80%, #000000 100%);
+    z-index: 2;
+}
+
+.content-layer {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 50px;
+}
+.content-layer.right-align { text-align: right; }
+.content-layer.left-align { text-align: left; }
+.content-layer.center-align { text-align: center; }
+
+.cinematic-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    color: #FFFFFF;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.9);
+    margin-bottom: 20px;
+}
+
+.cinematic-text {
+    font-size: 1.4rem;
+    line-height: 2;
+    color: rgba(255,255,255,0.8);
+    max-width: 600px;
+    text-shadow: 0 5px 20px rgba(0,0,0,0.9);
+}
+.right-align .cinematic-text { margin-right: 0; margin-left: auto; }
+.left-align .cinematic-text { margin-left: 0; margin-right: auto; }
+.center-align .cinematic-text { margin: 0 auto; }
+
+/* الظهور السينمائي */
+.fade-up-reveal {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: opacity 1.2s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fade-up-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* البطاقة الزجاجية */
+.pledge-container {
+    padding: 150px 20px;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 5;
+    background: #000000;
+}
+
+.glass-panel {
+    background: rgba(17, 72, 69, 0.1); /* Jableh Green Tint */
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(196, 154, 69, 0.2);
+    border-radius: 20px;
+    padding: 60px;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(196, 154, 69, 0.05);
+}
+
+.glass-panel h2 { color: #C49A45; margin-bottom: 15px; font-size: 2rem; }
+.glass-panel p { margin-bottom: 30px; color: rgba(255,255,255,0.7); }
+
+.glass-input {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 18px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+.glass-input:focus { border-color: #C49A45; outline: none; background: rgba(0,0,0,0.6); }
+
+.magnetic-btn {
+    background: linear-gradient(135deg, #C49A45, #8B6824);
+    color: #000;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.footer {
+    text-align: center;
+    padding: 60px 20px;
+    background: #000000;
+    border-top: 1px solid rgba(196, 154, 69, 0.1);
+}
+
+.signature-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.signature {
+    font-family: 'Cairo', sans-serif;
+    color: #C49A45;
+    opacity: 0.8;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    color: #C49A45;
+    background: rgba(196, 154, 69, 0.1);
+    border-color: rgba(196, 154, 69, 0.3);
+    transform: translateY(-3px);
+}
+
+.copyright-text {
+    font-family: 'Tajawal', sans-serif;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
